@@ -24,6 +24,7 @@ class LearningAgent(Agent):
         ## TO DO ##
         ###########
         # Set any additional class parameters as needed
+        self.trial = 0           # Trial number record
 
 
     def reset(self, destination=None, testing=False):
@@ -40,14 +41,33 @@ class LearningAgent(Agent):
         # Update epsilon using a decay function of your choice
         # Update additional class parameters as needed
         # If 'testing' is True, set epsilon and alpha to 0
-        def _linear_decay(self, decay_coef):
-            self.epsilon -= decay_coef
+        def _linear_epsilon_decay(self, coef=0.01):
+            self.epsilon -= coef
+        
+        def _exp_epsilon_decay(self, base=0.97):
+            self.epsilon *= base
+        
+        def _linear_alpha_decay(self, coef=0.005):
+            self.alpha -= coef
+            
+        def _exp_alpha_decay(self, base=0.99):
+            self.alpha *= base
+            
+        def _cos_epsilon_decay(self, a=0.017):
+            self.epsilon = math.cos(a*self.trial)
         
         if testing:
             self.epsilon = .0
             self.alpha = .0
         else:
-            _linear_decay(self, 0.01)
+            self.trial += 1
+            
+            _cos_epsilon_decay(self)
+            
+            # _linear_epsilon_decay(self, 0.01)
+            #_exp_epsilon_decay(self, 0.97)
+            # _linear_alpha -= (self, 0.005)
+            _exp_alpha_decay(self, 0.99)
 
         return None
 
